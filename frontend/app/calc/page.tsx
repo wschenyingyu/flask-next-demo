@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import API_BASE_URL from "@/lib/api";
 
 export default function CalcPage() {
   const [day, setDay] = useState("");
@@ -7,7 +8,7 @@ export default function CalcPage() {
   const [total, setTotal] = useState<number | null>(null);
 
   const calcRent = async () => {
-    const res = await fetch(`http://127.0.0.1:5000/api/calc_rent?day=${day}&price=${price}`);
+    const res = await fetch(`${API_BASE_URL}/api/calc_rent?day=${day}&price=${price}`);
     const data = await res.json();
     setTotal(data.total_rent);
   };
