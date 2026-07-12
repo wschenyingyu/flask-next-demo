@@ -5,7 +5,9 @@ import os
 
 app = Flask(__name__)
 CORS(app)
-DB_FILE = "goods.db"
+
+# 数据库文件路径：优先用环境变量，适配Render等云平台
+DB_FILE = os.environ.get("DB_FILE", "goods.db")
 
 def init_db():
     if not os.path.exists(DB_FILE):
@@ -72,4 +74,6 @@ def calc_rent():
         return jsonify({"code": 400, "msg": "天数、单价必须输入数字"}), 400
 
 if __name__ == '__main__':
-    app.run(debug=True, port=5000)
+    # 本地开发：默认5000端口；线上部署：读PORT环境变量，绑定0.0.0.0
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host="0.0.0.0", debug=True, port=port)

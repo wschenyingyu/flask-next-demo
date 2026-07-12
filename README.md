@@ -6,9 +6,9 @@
 
 ## 技术栈
 
-- **后端**: Flask 2.3.3 + SQLite + Flask-CORS 4.0.0
+- **后端**: Flask 2.3.3 + SQLite + Flask-CORS 4.0.0 + Gunicorn 21.2.0
 - **前端**: Next.js 16.1.0 + TypeScript
-- **部署**: ngrok 内网穿透
+- **部署**: Vercel（前端）+ Render（后端），详见 [DEPLOY.md](DEPLOY.md)
 
 ## 功能特性
 
@@ -21,9 +21,11 @@
 ```
 flask-next-demo/
 ├── backend/
-│   ├── app.py          # Flask后端主文件
-│   ├── requirements.txt # Python依赖
-│   └── goods.db        # SQLite数据库（运行后自动生成）
+│   ├── app.py            # Flask后端主文件
+│   ├── wsgi.py           # Gunicorn入口文件
+│   ├── requirements.txt  # Python依赖
+│   ├── .env.example      # 环境变量示例
+│   └── goods.db          # SQLite数据库（运行后自动生成）
 ├── frontend/
 │   ├── app/
 │   │   ├── page.tsx          # 首页
@@ -33,10 +35,15 @@ flask-next-demo/
 │   │   │   └── page.tsx      # 费用计算器页
 │   │   ├── layout.tsx        # 布局组件
 │   │   └── globals.css       # 全局样式
+│   ├── lib/
+│   │   └── api.ts            # API地址统一配置
+│   ├── .env.local.example    # 前端环境变量示例
 │   ├── package.json
 │   ├── tsconfig.json
 │   └── next.config.mjs
+├── render.yaml              # Render部署配置
 ├── README.md
+├── DEPLOY.md                # 部署指南
 ├── API_DOC.md
 └── prompt_log.md
 ```
@@ -69,7 +76,10 @@ npm run dev
 
 ## 线上访问
 
-后端API线上访问地址（ngrok）: 待部署后更新
+- **前端地址（Vercel）**: 待部署后更新
+- **后端API地址（Render）**: 待部署后更新
+
+部署步骤详见 [DEPLOY.md](DEPLOY.md)
 
 ## 实训考核材料
 

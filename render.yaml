@@ -1,0 +1,12 @@
+# Render部署配置文件
+# 部署后在Render控制台导入此文件即可自动创建后端服务
+services:
+  - type: web
+    name: community-goods-api
+    runtime: python
+    rootDir: backend
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn wsgi:app --bind 0.0.0.0:$PORT
+    envVars:
+      - key: DB_FILE
+        value: /tmp/goods.db
