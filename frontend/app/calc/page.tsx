@@ -1,13 +1,15 @@
 "use client";
 import { useState } from "react";
 
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:5000";
+
 export default function CalcPage() {
   const [day, setDay] = useState("");
   const [price, setPrice] = useState("");
   const [total, setTotal] = useState<number | null>(null);
 
   const calcRent = async () => {
-    const res = await fetch(`http://127.0.0.1:5000/api/calc_rent?day=${day}&price=${price}`);
+    const res = await fetch(`${API_URL}/api/calc_rent?day=${day}&price=${price}`);
     const data = await res.json();
     setTotal(data.total_rent);
   };

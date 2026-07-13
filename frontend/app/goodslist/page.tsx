@@ -1,6 +1,8 @@
 "use client";
 import { useEffect, useState } from "react";
 
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:5000";
+
 type GoodsItem = {
   id: number;
   name: string;
@@ -15,7 +17,7 @@ export default function GoodsList() {
   const [price, setPrice] = useState("");
 
   const loadGoods = () => {
-    fetch("http://127.0.0.1:5000/api/goods")
+    fetch(`${API_URL}/api/goods`)
       .then(res => res.json())
       .then(data => setGoods(data.data));
   };
@@ -25,7 +27,7 @@ export default function GoodsList() {
   }, []);
 
   const submitAdd = async () => {
-    await fetch("http://127.0.0.1:5000/api/add_goods", {
+    await fetch(`${API_URL}/api/add_goods`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ name, category, price_per_day: price })

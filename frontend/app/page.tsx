@@ -1,10 +1,12 @@
 "use client";
 import { useEffect, useState } from "react";
 
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:5000";
+
 export default function Home() {
   const [tip, setTip] = useState("");
   useEffect(() => {
-    fetch("http://127.0.0.1:5000/api/index")
+    fetch(`${API_URL}/api/index`)
       .then(res => res.json())
       .then(data => setTip(data.msg));
   }, []);
