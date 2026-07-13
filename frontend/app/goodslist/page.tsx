@@ -1,6 +1,5 @@
 "use client";
 import { useEffect, useState } from "react";
-import API_BASE_URL from "@/lib/api";
 
 type GoodsItem = {
   id: number;
@@ -16,9 +15,9 @@ export default function GoodsList() {
   const [price, setPrice] = useState("");
 
   const loadGoods = () => {
-    fetch(`${API_BASE_URL}/api/goods`)
+    fetch("/api/goods")
       .then(res => res.json())
-      .then(data => setGoods(data.data));
+      .then(data => setGoods(data));
   };
 
   useEffect(() => {
@@ -26,7 +25,7 @@ export default function GoodsList() {
   }, []);
 
   const submitAdd = async () => {
-    await fetch(`${API_BASE_URL}/api/add_goods`, {
+    await fetch("/api/goods", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ name, category, price_per_day: price })

@@ -1,11 +1,10 @@
 "use client";
 import { useEffect, useState } from "react";
-import API_BASE_URL from "@/lib/api";
 
 export default function Home() {
   const [tip, setTip] = useState("");
   useEffect(() => {
-    fetch(`${API_BASE_URL}/api/index`)
+    fetch("/api/index")
       .then(res => res.json())
       .then(data => setTip(data.msg));
   }, []);
