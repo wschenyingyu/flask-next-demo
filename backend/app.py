@@ -2,31 +2,47 @@ from flask import Flask, jsonify, request
 from flask_cors import CORS
 import sqlite3
 import os
+import hashlib
 
 app = Flask(__name__)
 CORS(app)
 DB_FILE = os.environ.get("DB_FILE", "goods.db")
 
 def init_db():
-    if not os.path.exists(DB_FILE):
-        conn = sqlite3.connect(DB_FILE)
-        cur = conn.cursor()
-        cur.execute('''
-        CREATE TABLE IF NOT EXISTS goods(
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            name TEXT NOT NULL,
-            category TEXT,
-            price_per_day REAL
-        )
-        ''')
-        init_data = [
-            ("冲击钻", "维修工具", 3.0),
-            ("投影仪", "影音家电", 8.0),
-            ("露营帐篷", "户外用品", 5.0)
-        ]
-        cur.executemany("INSERT INTO goods(name, category, price_per_day) VALUES (?, ?, ?)", init_data)
-        conn.commit()
-        conn.close()
+    conn = sqlite3.connect(DB_FILE)
+    cur = conn.cursor()
+    cur.execute('''
+    CREATE TABLE IF NOT EXISTS goods(
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        name TEXT NOT NULL,
+        category TEXT,
+        price_per_day REAL
+    )
+    ''')
+    cur.execute('''
+    CREATE TABLE IF NOT EXISTS users(
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        username TEXT NOT NULL,
+        email TEXT NOT NULL UNIQUE,
+        password TEXT NOT NULL,
+        avatar TEXT DEFAULT '',
+        phone TEXT DEFAULT '',
+        role TEXT DEFAULT 'user'
+    )
+    ''')
+    init_data = [
+        ("冲击钻", "维修工具", 3.0),
+        ("投影仪", "影音家电", 8.0),
+        ("露营帐篷", "户外用品", 5.0)
+    ]
+    cur.executemany("INSERT INTO goods(name, category, price_per_day) VALUES (?, ?, ?)", init_data)
+    cur.execute("SELECT COUNT(*) FROM users WHERE email = ?", ("admin@test.com",))
+    if cur.fetchone()[0] == 0:
+        admin_pwd = hashlib.md5("123456".encode()).hexdigest()
+        cur.execute("INSERT INTO users(username, email, password, role) VALUES (?, ?, ?, ?)", 
+                    ("admin", "admin@test.com", admin_pwd, "admin"))
+    conn.commit()
+    conn.close()
 
 init_db()
 
@@ -70,6 +86,62 @@ def calc_rent():
         return jsonify({"code": 200, "total_rent": total, "msg": "费用计算完成"})
     except:
         return jsonify({"code": 400, "msg": "天数、单价必须输入数字"}), 400
+
+@app.route("/api/register", methods=["POST"])
+def register():
+    data = request.json
+    username = data.get("username")
+    email = data.get("email")
+    password = data.get("password")
+    
+    if not username or not email or not password:
+        return jsonify({"code": 400, "msg": "用户名、邮箱、密码不能为空"}), 400
+    
+    conn = sqlite3.connect(DB_FILE)
+    cur = conn.cursor()
+    try:
+        cur.execute("SELECT COUNT(*) FROM users WHERE email = ?", (email,))
+        if cur.fetchone()[0] > 0:
+            return jsonify({"code": 400, "msg": "该邮箱已被注册"}), 400
+        
+        hashed_pwd = hashlib.md5(password.encode()).hexdigest()
+        cur.execute("INSERT INTO users(username, email, password) VALUES (?, ?, ?)", 
+                    (username, email, hashed_pwd))
+        conn.commit()
+        return jsonify({"code": 200, "msg": "注册成功"})
+    except Exception as e:
+        conn.rollback()
+        return jsonify({"code": 500, "msg": "注册失败"}), 500
+    finally:
+        conn.close()
+
+@app.route("/api/login", methods=["POST"])
+def login():
+    data = request.json
+    email = data.get("email")
+    password = data.get("password")
+    
+    if not email or not password:
+        return jsonify({"code": 400, "msg": "邮箱、密码不能为空"}), 400
+    
+    conn = sqlite3.connect(DB_FILE)
+    conn.row_factory = sqlite3.Row
+    cur = conn.cursor()
+    try:
+        hashed_pwd = hashlib.md5(password.encode()).hexdigest()
+        cur.execute("SELECT * FROM users WHERE email = ? AND password = ?", (email, hashed_pwd))
+        user = cur.fetchone()
+        
+        if not user:
+            return jsonify({"code": 400, "msg": "邮箱或密码错误"}), 400
+        
+        user_data = dict(user)
+        user_data.pop("password")
+        return jsonify({"code": 200, "data": user_data, "msg": "登录成功"})
+    except Exception as e:
+        return jsonify({"code": 500, "msg": "登录失败"}), 500
+    finally:
+        conn.close()
 
 if __name__ == '__main__':
     port = int(os.environ.get("PORT", 5000))
