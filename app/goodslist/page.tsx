@@ -43,29 +43,27 @@ export default function GoodsList() {
   const categories = ["工具", "家电", "户外", "书籍", "其他"];
 
   return (
-    <div className="space-y-6">
-      <div className="bg-white rounded-xl p-6 shadow-md">
-        <h1 className="text-2xl font-bold text-gray-800 mb-4">闲置物品发布与列表</h1>
-        
-        <div className="bg-gray-50 rounded-lg p-4 mb-6">
-          <h3 className="font-semibold text-gray-700 mb-3">发布新物品</h3>
-          <div className="flex flex-wrap gap-3">
+    <div>
+      <div className="card">
+        <h1 style={{ fontSize: '28px', marginBottom: '20px' }}>闲置物品发布与列表</h1>
+
+        <div style={{ background: '#f9fafb', padding: '20px', borderRadius: '12px', marginBottom: '30px' }}>
+          <h3 style={{ marginBottom: '15px' }}>发布新物品</h3>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
             <input
               placeholder="物品名称"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              style={{ flex: '1 1 200px' }}
             />
             <select
               value={category}
               onChange={(e) => setCategory(e.target.value)}
-              className="border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white"
+              style={{ flex: '1 1 150px' }}
             >
               <option value="">选择分类</option>
               {categories.map((cat) => (
-                <option key={cat} value={cat}>
-                  {cat}
-                </option>
+                <option key={cat} value={cat}>{cat}</option>
               ))}
             </select>
             <input
@@ -73,47 +71,33 @@ export default function GoodsList() {
               placeholder="单日租金（元）"
               value={price}
               onChange={(e) => setPrice(e.target.value)}
-              className="border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              style={{ flex: '1 1 150px' }}
             />
-            <button
-              onClick={submitAdd}
-              className="bg-blue-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-blue-700 transition-colors"
-            >
+            <button onClick={submitAdd} className="btn btn-primary">
               发布闲置
             </button>
           </div>
         </div>
 
         <div>
-          <h3 className="font-semibold text-gray-700 mb-3">可借用物品列表</h3>
+          <h3 style={{ marginBottom: '15px' }}>可借用物品列表</h3>
           {goods.length === 0 ? (
-            <div className="text-center py-8 text-gray-500">
-              <div className="text-4xl mb-2">📭</div>
+            <div className="empty-state">
+              <div className="icon">📭</div>
               <p>暂无可借物品，快来发布第一个吧！</p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div className="goods-grid">
               {goods.map((item) => (
-                <div
-                  key={item.id}
-                  className="bg-gray-50 border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow"
-                >
-                  <div className="flex items-start justify-between mb-2">
-                    <span className="bg-blue-100 text-blue-600 px-2 py-1 rounded text-sm">
-                      #{item.id}
-                    </span>
-                    <span className="bg-gray-200 text-gray-600 px-2 py-1 rounded text-sm">
-                      {item.category}
-                    </span>
+                <div key={item.id} className="goods-card">
+                  <div className="tags">
+                    <span className="tag tag-blue">#{item.id}</span>
+                    <span className="tag tag-gray">{item.category}</span>
                   </div>
-                  <h4 className="text-lg font-semibold text-gray-800 mb-2">
-                    {item.name}
-                  </h4>
-                  <div className="flex items-center justify-between">
-                    <span className="text-red-500 font-bold text-lg">
-                      ¥{item.price_per_day}/天
-                    </span>
-                    <button className="bg-green-600 text-white px-4 py-1 rounded-lg text-sm hover:bg-green-700 transition-colors">
+                  <h4>{item.name}</h4>
+                  <div className="price-row">
+                    <span className="price">¥{item.price_per_day}/天</span>
+                    <button className="btn btn-success" style={{ padding: '6px 16px', fontSize: '14px' }}>
                       申请借用
                     </button>
                   </div>

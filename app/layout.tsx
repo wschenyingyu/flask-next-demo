@@ -14,11 +14,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="zh-CN">
-      <body className="min-h-screen bg-gray-100">
+      <body>
         <Navbar />
-        <main className="max-w-6xl mx-auto px-4 py-8">
-          {children}
-        </main>
+        <main>{children}</main>
       </body>
     </html>
   );

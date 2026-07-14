@@ -23,75 +23,67 @@ export default function CalcPage() {
   };
 
   return (
-    <div className="max-w-2xl mx-auto">
-      <div className="bg-white rounded-xl p-8 shadow-md">
-        <h1 className="text-2xl font-bold text-gray-800 mb-6 text-center">
+    <div style={{ maxWidth: '600px', margin: '0 auto' }}>
+      <div className="card">
+        <h1 style={{ fontSize: '28px', marginBottom: '30px', textAlign: 'center' }}>
           💰 租赁费用计算工具
         </h1>
 
-        <div className="space-y-4 mb-6">
-          <div>
-            <label className="block text-gray-700 font-semibold mb-2">
-              借用天数
-            </label>
-            <input
-              type="number"
-              min="1"
-              placeholder="请输入借用天数"
-              value={day}
-              onChange={(e) => setDay(e.target.value)}
-              className="w-full border border-gray-300 rounded-lg px-4 py-3 text-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            />
-          </div>
-
-          <div>
-            <label className="block text-gray-700 font-semibold mb-2">
-              物品单日租金（元）
-            </label>
-            <input
-              type="number"
-              min="0"
-              step="0.5"
-              placeholder="请输入单日租金"
-              value={price}
-              onChange={(e) => setPrice(e.target.value)}
-              className="w-full border border-gray-300 rounded-lg px-4 py-3 text-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            />
-          </div>
+        <div style={{ marginBottom: '20px' }}>
+          <label style={{ display: 'block', fontWeight: 600, marginBottom: '8px' }}>
+            借用天数
+          </label>
+          <input
+            type="number"
+            min="1"
+            placeholder="请输入借用天数"
+            value={day}
+            onChange={(e) => setDay(e.target.value)}
+            style={{ width: '100%' }}
+          />
         </div>
 
-        <div className="flex space-x-4 mb-6">
-          <button
-            onClick={calcRent}
-            className="flex-1 bg-blue-600 text-white py-3 rounded-lg font-semibold text-lg hover:bg-blue-700 transition-colors"
-          >
+        <div style={{ marginBottom: '20px' }}>
+          <label style={{ display: 'block', fontWeight: 600, marginBottom: '8px' }}>
+            物品单日租金（元）
+          </label>
+          <input
+            type="number"
+            min="0"
+            step="0.5"
+            placeholder="请输入单日租金"
+            value={price}
+            onChange={(e) => setPrice(e.target.value)}
+            style={{ width: '100%' }}
+          />
+        </div>
+
+        <div style={{ display: 'flex', gap: '10px', marginBottom: '20px' }}>
+          <button onClick={calcRent} className="btn btn-primary" style={{ flex: 1 }}>
             计算总租金
           </button>
-          <button
-            onClick={clear}
-            className="px-6 py-3 border border-gray-300 text-gray-600 rounded-lg font-semibold hover:bg-gray-50 transition-colors"
-          >
+          <button onClick={clear} className="btn" style={{ border: '2px solid #ddd', color: '#666' }}>
             重置
           </button>
         </div>
 
         {total !== null && (
-          <div className="bg-gradient-to-r from-green-50 to-green-100 border border-green-300 rounded-xl p-6 text-center">
-            <p className="text-gray-600 mb-2">应付总租金</p>
-            <p className="text-4xl font-bold text-green-600">¥{total}</p>
-            <p className="text-gray-500 mt-2">
+          <div className="result-box">
+            <p style={{ color: '#666', marginBottom: '10px' }}>应付总租金</p>
+            <p className="amount">¥{total}</p>
+            <p style={{ color: '#999', marginTop: '10px' }}>
               ({day}天 × ¥{price}/天)
             </p>
           </div>
         )}
 
-        <div className="mt-8 bg-gray-50 rounded-lg p-4">
-          <h3 className="font-semibold text-gray-700 mb-2">费用说明</h3>
-          <ul className="text-gray-600 text-sm space-y-1">
-            <li>• 租金按实际借用天数计算</li>
-            <li>• 不足一天按一天计算</li>
-            <li>• 押金另计，具体与物品主人协商</li>
-            <li>• 如需延长借用时间，请提前告知</li>
+        <div style={{ marginTop: '30px', background: '#f9fafb', padding: '20px', borderRadius: '12px' }}>
+          <h3 style={{ fontWeight: 600, marginBottom: '10px' }}>费用说明</h3>
+          <ul style={{ color: '#666', fontSize: '14px', paddingLeft: '20px' }}>
+            <li>租金按实际借用天数计算</li>
+            <li>不足一天按一天计算</li>
+            <li>押金另计，具体与物品主人协商</li>
+            <li>如需延长借用时间，请提前告知</li>
           </ul>
         </div>
       </div>
