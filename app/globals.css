@@ -1,4 +1,4 @@
-@import "tailwindcss";
+@import "https://cdn.jsdelivr.net/npm/tailwindcss@3";
 
 @theme {
   --color-primary: #2563eb;
