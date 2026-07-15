@@ -16,5 +16,14 @@
     "avatar": "",
     "phone": "13800138001",
     "role": "user"
+  },
+  {
+    "id": 3,
+    "username": "testuser",
+    "email": "test@qq.com",
+    "password": "123456",
+    "avatar": "",
+    "phone": "",
+    "role": "user"
   }
 ]
