@@ -43,7 +43,7 @@ export default function ActivityPage() {
   }, [activities.length]);
 
   const loadActivities = () => {
-    fetch("http://127.0.0.1:5000/api/activities")
+    fetch("/api/activities")
       .then(res => res.json())
       .then(data => {
         console.log("活动数据:", data.data);
@@ -80,7 +80,7 @@ export default function ActivityPage() {
     const userName = user ? JSON.parse(user).username : "匿名";
 
     try {
-      const res = await fetch("http://127.0.0.1:5000/api/add_activity", {
+      const res = await fetch("/api/add_activity", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -94,7 +94,7 @@ export default function ActivityPage() {
 
       if (data.code === 200 && imageFile) {
         // 获取最新活动的ID
-        const allRes = await fetch("http://127.0.0.1:5000/api/activities");
+        const allRes = await fetch("/api/activities");
         const allData = await allRes.json();
         const latestActivity = allData.data[0];
         
@@ -104,7 +104,7 @@ export default function ActivityPage() {
           formData.append("file", imageFile);
           formData.append("activity_id", latestActivity.id.toString());
           
-          const uploadRes = await fetch("http://127.0.0.1:5000/api/upload_activity_image", {
+          const uploadRes = await fetch("/api/upload_activity_image", {
             method: "POST",
             body: formData
           });
@@ -157,7 +157,7 @@ export default function ActivityPage() {
   const getImageUrl = (image: string) => {
     if (!image) return "";
     if (image.startsWith("http")) return image;
-    return `http://127.0.0.1:5000/uploads/${image}`;
+    return `/uploads/${image}`;
   };
 
   return (

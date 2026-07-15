@@ -1,33 +1,40 @@
-import { NextResponse } from 'next/server'
-import fs from 'fs'
-import path from 'path'
-
-const DATA_FILE = path.join(process.cwd(), 'app', 'api', 'goods.json')
-
-function readGoods() {
-  const data = fs.readFileSync(DATA_FILE, 'utf8')
-  return JSON.parse(data)
-}
-
-function writeGoods(goods: any[]) {
-  fs.writeFileSync(DATA_FILE, JSON.stringify(goods, null, 2))
-}
+import { NextRequest, NextResponse } from "next/server";
+import { store } from "@/lib/store";
 
 export async function GET() {
-  const goods = readGoods()
-  return NextResponse.json(goods)
+  return NextResponse.json({
+    code: 200,
+    data: store.getGoods(),
+    msg: "物品查询成功",
+  });
 }
 
-export async function POST(request: Request) {
-  const newGoods = await request.json()
-  const goods = readGoods()
-  
-  const maxId = Math.max(...goods.map((g: any) => g.id), 0)
-  newGoods.id = maxId + 1
-  newGoods.price_per_day = Number(newGoods.price_per_day) || 0
-  
-  goods.push(newGoods)
-  writeGoods(goods)
-  
-  return NextResponse.json(newGoods, { status: 201 })
+export async function POST(request: NextRequest) {
+  const data = await request.json();
+  const name = data.name;
+  const category = data.category || "";
+  const price_per_day = data.price_per_day;
+  const description = data.description || "";
+  const image = data.image || "";
+  const owner_id = data.owner_id || 1;
+  const owner_name = data.owner_name || "admin";
+
+  if (!name || !price_per_day) {
+    return NextResponse.json(
+      { code: 400, msg: "物品名称、单日租赁价格不能为空" },
+      { status: 400 }
+    );
+  }
+
+  const item = store.addGoods({
+    name,
+    category,
+    price_per_day: parseFloat(price_per_day),
+    description,
+    image,
+    owner_id,
+    owner_name,
+  });
+
+  return NextResponse.json({ code: 200, msg: "闲置物品发布成功", data: item });
 }

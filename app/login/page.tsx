@@ -24,7 +24,7 @@ export default function LoginPage() {
     const url = isLogin ? "/api/login" : "/api/register";
     const data = isLogin ? { email, password } : { username, email, password };
 
-    const res = await fetch(`http://127.0.0.1:5000${url}`, {
+    const res = await fetch(url, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(data)

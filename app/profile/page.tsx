@@ -24,7 +24,7 @@ export default function ProfilePage() {
     setEditPhone(parsedUser.phone || "");
     setEditUsername(parsedUser.username || "");
 
-    fetch(`http://127.0.0.1:5000/api/user/${parsedUser.id}`)
+    fetch(`/api/user/${parsedUser.id}`)
       .then(res => res.json())
       .then(data => {
         if (data.code === 200) {
@@ -34,14 +34,14 @@ export default function ProfilePage() {
         }
       });
 
-    fetch("http://127.0.0.1:5000/api/goods")
+    fetch("/api/goods")
       .then(res => res.json())
       .then(data => {
         const filtered = data.data.filter((g: any) => g.owner_id === parsedUser.id);
         setMyGoods(filtered);
       });
 
-    fetch(`http://127.0.0.1:5000/api/borrow_records?user_id=${parsedUser.id}`)
+    fetch(`/api/borrow_records?user_id=${parsedUser.id}`)
       .then(res => res.json())
       .then(data => {
         setMyBorrows(data.data);
@@ -66,7 +66,7 @@ export default function ProfilePage() {
       formData.append("file", avatarFile);
       formData.append("user_id", user.id.toString());
       
-      const res = await fetch("http://127.0.0.1:5000/api/upload_avatar", {
+      const res = await fetch("/api/upload_avatar", {
         method: "POST",
         body: formData
       });
@@ -79,7 +79,7 @@ export default function ProfilePage() {
     }
 
     if (editUsername !== user.username || editPhone !== user.phone) {
-      const res = await fetch(`http://127.0.0.1:5000/api/update_user/${user.id}`, {
+      const res = await fetch(`/api/update_user/${user.id}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ username: editUsername, phone: editPhone })
@@ -122,7 +122,7 @@ export default function ProfilePage() {
   }
 
   const avatarUrl = user.avatar 
-    ? `http://127.0.0.1:5000/uploads/${user.avatar}`
+    ? `/uploads/${user.avatar}`
     : "https://api.dicebear.com/7.x/avataaars/svg?seed=" + user.username;
 
   return (
@@ -259,7 +259,7 @@ export default function ProfilePage() {
                         {item.status === 'borrowed' && (
                           <button 
                             onClick={() => {
-                              fetch(`http://127.0.0.1:5000/api/return_goods/${item.id}`, { method: 'POST' })
+                              fetch(`/api/return_goods/${item.id}`, { method: 'POST' })
                                 .then(() => window.location.reload());
                             }}
                             className="btn-secondary"
@@ -271,7 +271,7 @@ export default function ProfilePage() {
                         <button
                           onClick={() => {
                             if (confirm('确定删除这个物品吗？')) {
-                              fetch(`http://127.0.0.1:5000/api/delete_goods/${item.id}`, { method: 'DELETE' })
+                              fetch(`/api/delete_goods/${item.id}`, { method: 'DELETE' })
                                 .then(() => window.location.reload());
                             }
                           }}

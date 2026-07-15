@@ -17,7 +17,7 @@ export default function BorrowPage() {
   const [records, setRecords] = useState<BorrowRecord[]>([]);
 
   const loadRecords = () => {
-    fetch("http://127.0.0.1:5000/api/borrow_records")
+    fetch("/api/borrow_records")
       .then(res => res.json())
       .then(data => setRecords(data.data));
   };
