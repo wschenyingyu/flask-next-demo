@@ -1,10 +1,15 @@
 services:
   - type: web
-    name: community-goods-api
+    name: community-goods-platform
     runtime: python
-    rootDir: backend
-    buildCommand: pip install -r requirements.txt
-    startCommand: gunicorn app:app
+    rootDir: .
+    buildCommand: |
+      npm install
+      npm run build
+      pip install -r backend/requirements.txt
+    startCommand: cd backend && gunicorn app:app
     envVars:
       - key: DB_FILE
         value: goods.db
+      - key: PORT
+        value: 5000
