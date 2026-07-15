@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import Navbar from "./components/Navbar";
+import ApiMockProvider from "./ApiMockProvider";
 
 export const metadata: Metadata = {
   title: "社区便民物品借用管理平台",
@@ -15,8 +16,10 @@ export default function RootLayout({
   return (
     <html lang="zh-CN">
       <body>
-        <Navbar />
-        <main>{children}</main>
+        <ApiMockProvider>
+          <Navbar />
+          <main>{children}</main>
+        </ApiMockProvider>
       </body>
     </html>
   );
